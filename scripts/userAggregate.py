@@ -81,9 +81,3 @@ def engagement_metricss(data):
     
     return engagement_metrics;
 
-
-# def top_10_users_by_metric(engagement_metrics, metric_columns):
-#     top_users = {}
-#     for metric in metric_columns:
-#         top_users[metric] = engagement_metrics.nlargest(10, metric)
-#     return top_users
