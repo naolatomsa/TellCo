@@ -61,3 +61,16 @@ def plot(user_aggregated):
     plt.xlabel('Total Data Volume (Bytes)', fontsize=12)
     plt.ylabel('Frequency', fontsize=12)
     plt.show()
+
+
+def top_3_most_used_app(user_aggregated, app_columns):
+    # Identify the total traffic per application
+    total_traffic_per_app = user_aggregated[app_columns].sum().sort_values(ascending=False)
+
+    # Plot the top 3 most used applications
+    top_3_apps = total_traffic_per_app.head(3)
+    top_3_apps.plot(kind='bar', color=['blue', 'green', 'orange'], figsize=(10, 6))
+    plt.title('Top 3 Most Used Applications')
+    plt.ylabel('Total Traffic (Bytes)')
+    plt.xlabel('Applications')
+    plt.show()
