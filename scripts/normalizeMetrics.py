@@ -26,3 +26,20 @@ def normalize_metrics(engagement_metrics):
 
     return normalized_metrics
 
+def optimize_k_in_k_means_clustering(engagement_metrics):
+    
+    normalized_metrics= normalize_metrics(engagement_metrics)
+    inertia = []
+    for k in range(1, 10):
+        kmeans = KMeans(n_clusters=k, random_state=42)
+        kmeans.fit(normalized_metrics)
+        inertia.append(kmeans.inertia_)
+
+    # Plot the elbow curve
+    plt.figure(figsize=(8, 6))
+    plt.plot(range(1, 10), inertia, marker='o')
+    plt.title('Elbow Method for Optimal k')
+    plt.xlabel('Number of Clusters')
+    plt.ylabel('Inertia')
+    plt.show()
+
