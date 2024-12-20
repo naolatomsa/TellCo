@@ -57,3 +57,33 @@ def segment_user(data):
     labels=['Light', 'Moderate', 'Heavy']
     )
     return user_aggregated;
+
+
+def engagement_metricss(data):
+    # Aggregate engagement metrics per user
+    engagement_metrics = data.groupby('MSISDN/Number').agg({
+        'Bearer Id': 'count',  # Session frequency
+        'Dur. (ms)': 'sum',  # Total session duration
+        'Total DL (Bytes)': 'sum',
+        'Total UL (Bytes)':'sum',
+        # 'Total Data Volume': 'sum'  # Total traffic (download + upload)
+    }).reset_index()
+
+    engagement_metrics['Total Data Volume'] = engagement_metrics['Total DL (Bytes)'] + engagement_metrics['Total UL (Bytes)']
+
+
+    # Rename columns for clarity
+    engagement_metrics.rename(columns={
+        'Bearer Id': 'Session Frequency',
+        'Dur. (ms)': 'Total Session Duration',
+        'Total Data Volume': 'Total Traffic'
+    }, inplace=True)
+    
+    return engagement_metrics;
+
+
+# def top_10_users_by_metric(engagement_metrics, metric_columns):
+#     top_users = {}
+#     for metric in metric_columns:
+#         top_users[metric] = engagement_metrics.nlargest(10, metric)
+#     return top_users
