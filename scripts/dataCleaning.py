@@ -27,3 +27,22 @@ def fill_missing_values(data):
     data.loc[:, 'Avg RTT UL (ms)'] = data['Avg RTT UL (ms)'].fillna(data['Avg RTT UL (ms)'].median())
     data.loc[:, 'Avg RTT DL (ms)'] = data['Avg RTT DL (ms)'].fillna(data['Avg RTT DL (ms)'].median())
     return data
+
+def identify_outliers(data, column):
+    Q1 = data[column].quantile(0.25)
+    Q3 = data[column].quantile(0.75)
+    IQR = Q3 - Q1
+    lower_bound = Q1 - 1.5 * IQR
+    upper_bound = Q3 + 1.5 * IQR
+    return data[(data[column] < lower_bound) | (data[column] > upper_bound)]
+
+# Cap and floor outliers for all numeric columns
+def cap_outliers(data, column):
+    Q1 = data[column].quantile(0.25)
+    Q3 = data[column].quantile(0.75)
+    IQR = Q3 - Q1
+    lower_bound = Q1 - 1.5 * IQR
+    upper_bound = Q3 + 1.5 * IQR
+    data[column] = data[column].clip(lower=lower_bound, upper=upper_bound)
+    return data
+
