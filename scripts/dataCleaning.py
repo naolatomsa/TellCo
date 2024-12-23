@@ -26,6 +26,8 @@ def drop_row(data):
 def fill_missing_values(data):
     data.loc[:, 'Avg RTT UL (ms)'] = data['Avg RTT UL (ms)'].fillna(data['Avg RTT UL (ms)'].median())
     data.loc[:, 'Avg RTT DL (ms)'] = data['Avg RTT DL (ms)'].fillna(data['Avg RTT DL (ms)'].median())
+    data.loc[:, 'TCP DL Retrans. Vol (Bytes)'] = data['Avg RTT UL (ms)'].fillna(data['Avg RTT UL (ms)'].median())
+    data.loc[:, 'TCP UL Retrans. Vol (Bytes)'] = data['Avg RTT DL (ms)'].fillna(data['Avg RTT DL (ms)'].median())
     return data
 
 def identify_outliers(data, column):
