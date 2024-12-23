@@ -3,6 +3,7 @@ from sklearn.cluster import KMeans
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
+import numpy as np
 
 def normalize_metrics(engagement_metrics):
     # Normalize metrics
@@ -12,6 +13,8 @@ def normalize_metrics(engagement_metrics):
     # Apply k-means clustering
     kmeans = KMeans(n_clusters=3, random_state=42)
     engagement_metrics['Cluster'] = kmeans.fit_predict(normalized_metrics)
+    
+    np.savetxt('engagement_centroids.csv', kmeans.cluster_centers_, delimiter=',')
 
     # Create a DataFrame for visualization
     normalized_metrics_df = pd.DataFrame(
