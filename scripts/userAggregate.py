@@ -83,5 +83,8 @@ def engagement_metricss(data):
         'Total Data Volume': 'Total Traffic'
     }, inplace=True)
     
+    
+    engagement_metrics.to_csv('engagement_metrics.csv', index=False)
+    print(f"Aggregated metrics saved to {'engagement_metrics.csv'}")
     return engagement_metrics;
 
