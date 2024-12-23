@@ -58,8 +58,8 @@ def most_frequent(aggregated):
 # Task 3.3: Distribution and Interpretation
 # Distribution of Throughput per Handset Type
 def distribution_and_interpretation(aggregated):
-    throughput_dist = aggregated.groupby('Handset type')['Avg_Throughput'].mean()
-    tcp_dist = aggregated.groupby('Handset type')['Avg_TCP_Retransmission'].mean()
+    throughput_dist = aggregated.groupby('Handset Type')['Avg_Throughput'].mean()
+    tcp_dist = aggregated.groupby('Handset Type')['Avg_TCP_Retransmission'].mean()
 
     # Plot distributions
     plt.figure(figsize=(10, 6))
