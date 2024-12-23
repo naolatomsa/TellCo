@@ -14,6 +14,12 @@ def merge_data(engagement_data, experience_data):
 
 # Task 4.1: Calculate Engagement and Experience Scores
 def calculate_euclidean_scores(data, engagement_centroids, experience_centroids):
+ 
+
+
+    # Fetch centroids and convert to NumPy arrays
+    engagement_centroids = engagement_centroids.drop(columns=['Cluster_Index']).to_numpy()
+    experience_centroids = experience_centroids.drop(columns=['Cluster_Index']).to_numpy()
 
     # Normalize data for fair distance calculation
     scaler = StandardScaler()
@@ -21,18 +27,19 @@ def calculate_euclidean_scores(data, engagement_centroids, experience_centroids)
     normalized_experience_data = scaler.fit_transform(data[['Avg_TCP_Retransmission', 'Avg_RTT', 'Avg_Throughput']])
 
     # Engagement score (distance to least engaged cluster)
-    least_engaged_centroid = engagement_centroids[0]  # Adjust based on actual least engaged cluster index
+    least_engaged_centroid = engagement_centroids[0]  # First cluster centroid
     data['Engagement Score'] = [
         np.sqrt(np.sum((row - least_engaged_centroid) ** 2)) for row in normalized_engagement_data
     ]
 
     # Experience score (distance to worst experience cluster)
-    worst_experience_centroid = experience_centroids[-1]  # Adjust based on actual worst experience cluster index
+    worst_experience_centroid = experience_centroids[-1]  # Last cluster centroid
     data['Experience Score'] = [
         np.sqrt(np.sum((row - worst_experience_centroid) ** 2)) for row in normalized_experience_data
     ]
 
     return data
+
 
 # Task 4.2: Calculate Satisfaction Score
 def calculate_satisfaction_score(data):
