@@ -25,6 +25,10 @@ def agggregate_metrics_per_customer(data):
 
     # Keep only relevant columns
     aggregated = aggregated[['MSISDN/Number', 'Avg_TCP_Retransmission', 'Avg_RTT', 'Avg_Throughput', 'Handset Type']]
+    
+     # Save the file in the current directory
+    aggregated.to_csv('experience_metrics.csv', index=False)
+    print(f"Aggregated metrics saved to {'experience_metrics.csv'}")
     return aggregated;
 
 
@@ -79,6 +83,9 @@ def k_means_clustering(aggregated):
     features = ['Avg_TCP_Retransmission', 'Avg_RTT', 'Avg_Throughput']
     scaler = StandardScaler()
     scaled_data = scaler.fit_transform(aggregated[features])
+    
+ 
+
 
     # Optimal k using Elbow Method
     inertia = []
@@ -86,7 +93,8 @@ def k_means_clustering(aggregated):
         kmeans = KMeans(n_clusters=k, random_state=42)
         kmeans.fit(scaled_data)
         inertia.append(kmeans.inertia_)
-
+        
+    np.savetxt('experience_centroids.csv', kmeans.cluster_centers_, delimiter=',')
     plt.figure(figsize=(8, 5))
     plt.plot(range(1, 10), inertia, marker='o')
     plt.title('Elbow Method for Optimal K')

@@ -1,6 +1,6 @@
 import pandas as pd
 def user_aggregate(data):
-    user_aggregated = data.groupby('IMSI').agg({
+    user_aggregated = data.groupby('MSISDN/Number').agg({
         'Bearer Id': 'count',  # Number of xDR sessions
         'Dur. (ms)': 'sum',  # Total session duration
         'Total DL (Bytes)': 'sum',  # Total download volume
@@ -47,6 +47,10 @@ def calculate_total_data_volume(data):
 
     # Calculate Total Data Volume for Other Applications
     user_aggregated['Other'] = user_aggregated['Other DL (Bytes)'] + user_aggregated['Other UL (Bytes)']
+    
+         # Save the file in the current directory
+    user_aggregated.to_csv('engagement_metrics.csv', index=False)
+    print(f"Aggregated metrics saved to {'engagement_metrics.csv'}")
     return user_aggregated;
 
 def segment_user(data):
