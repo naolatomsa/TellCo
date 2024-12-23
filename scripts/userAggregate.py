@@ -1,4 +1,5 @@
 import pandas as pd
+from sqlalchemy import create_engine
 def user_aggregate(data):
     user_aggregated = data.groupby('MSISDN/Number').agg({
         'Bearer Id': 'count',  # Number of xDR sessions
@@ -63,7 +64,7 @@ def segment_user(data):
     return user_aggregated;
 
 
-def engagement_metricss(data):
+def engagement_metricss(data, table_name, db_uri):
     # Aggregate engagement metrics per user
     engagement_metrics = data.groupby('MSISDN/Number').agg({
         'Bearer Id': 'count',  # Session frequency
@@ -84,7 +85,11 @@ def engagement_metricss(data):
     }, inplace=True)
     
     
-    engagement_metrics.to_csv('engagement_metrics.csv', index=False)
-    print(f"Aggregated metrics saved to {'engagement_metrics.csv'}")
+    engine = create_engine(db_uri)
+
+    engagement_metrics.to_sql(
+        table_name, engine, if_exists='replace', index=False
+    )
+    
     return engagement_metrics;
 

@@ -4,8 +4,9 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 import numpy as np
+from sqlalchemy import create_engine
 
-def normalize_metrics(engagement_metrics):
+def normalize_metrics(engagement_metrics, table_name_centroids, db_uri):
     # Normalize metrics
     scaler = MinMaxScaler()
     normalized_metrics = scaler.fit_transform(engagement_metrics[['Session Frequency', 'Total Session Duration', 'Total Traffic']])
@@ -14,7 +15,20 @@ def normalize_metrics(engagement_metrics):
     kmeans = KMeans(n_clusters=3, random_state=42)
     engagement_metrics['Cluster'] = kmeans.fit_predict(normalized_metrics)
     
-    np.savetxt('engagement_centroids.csv', kmeans.cluster_centers_, delimiter=',')
+    engine = create_engine(db_uri)
+
+    # Convert centroids to a DataFrame for export
+    centroids_df = pd.DataFrame(
+        kmeans.cluster_centers_, 
+        columns=['Session Frequency', 'Total Session Duration', 'Total Traffic']
+    )
+    centroids_df['Cluster_Index'] = range(len(kmeans.cluster_centers_))
+
+    # Export centroids to database
+    centroids_df.to_sql(
+        table_name_centroids, engine, if_exists='replace', index=False
+    )
+
 
     # Create a DataFrame for visualization
     normalized_metrics_df = pd.DataFrame(
@@ -31,7 +45,7 @@ def normalize_metrics(engagement_metrics):
 
 def optimize_k_in_k_means_clustering(engagement_metrics):
     
-    normalized_metrics= normalize_metrics(engagement_metrics)
+    normalized_metrics= normalize_metrics(engagement_metrics, 'engagement_centroids', "postgresql+psycopg2://postgres:admin@localhost:5432/xdr_data" )
     inertia = []
     for k in range(1, 10):
         kmeans = KMeans(n_clusters=k, random_state=42)

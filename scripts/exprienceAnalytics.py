@@ -4,9 +4,10 @@ from sklearn.cluster import KMeans
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.preprocessing import StandardScaler
+from sqlalchemy import create_engine
 
 
-def agggregate_metrics_per_customer(data):
+def agggregate_metrics_per_customer(data, table_name, db_uri):
     aggregated = data.groupby('MSISDN/Number').agg({
         'Avg RTT DL (ms)': 'mean',
         'Avg RTT UL (ms)': 'mean',
@@ -27,8 +28,13 @@ def agggregate_metrics_per_customer(data):
     aggregated = aggregated[['MSISDN/Number', 'Avg_TCP_Retransmission', 'Avg_RTT', 'Avg_Throughput', 'Handset Type']]
     
      # Save the file in the current directory
-    aggregated.to_csv('experience_metrics.csv', index=False)
-    print(f"Aggregated metrics saved to {'experience_metrics.csv'}")
+    # aggregated.to_csv('experience_metrics.csv', index=False)
+    # print(f"Aggregated metrics saved to {'experience_metrics.csv'}")
+    engine = create_engine(db_uri)
+
+    aggregated.to_sql(
+        table_name, engine, if_exists='replace', index=False
+    )
     return aggregated;
 
 
@@ -78,14 +84,12 @@ def distribution_and_interpretation(aggregated):
     
 
 # Task 3.4: K-Means Clustering
-def k_means_clustering(aggregated):
+def k_means_clustering(aggregated,table_name_centroids, db_uri):
     # Normalize metrics
     features = ['Avg_TCP_Retransmission', 'Avg_RTT', 'Avg_Throughput']
     scaler = StandardScaler()
     scaled_data = scaler.fit_transform(aggregated[features])
     
- 
-
 
     # Optimal k using Elbow Method
     inertia = []
@@ -94,7 +98,21 @@ def k_means_clustering(aggregated):
         kmeans.fit(scaled_data)
         inertia.append(kmeans.inertia_)
         
-    np.savetxt('experience_centroids.csv', kmeans.cluster_centers_, delimiter=',')
+        engine = create_engine(db_uri)
+
+    # Convert centroids to a DataFrame for export
+    centroids_df = pd.DataFrame(
+        kmeans.cluster_centers_, 
+        columns=['Avg_TCP_Retransmission', 'Avg_RTT', 'Avg_Throughput']
+    )
+    centroids_df['Cluster_Index'] = range(len(kmeans.cluster_centers_))
+
+    # Export centroids to database
+    centroids_df.to_sql(
+        table_name_centroids, engine, if_exists='replace', index=False
+    )
+        
+    # np.savetxt('experience_centroids.csv', kmeans.cluster_centers_, delimiter=',')
     plt.figure(figsize=(8, 5))
     plt.plot(range(1, 10), inertia, marker='o')
     plt.title('Elbow Method for Optimal K')
