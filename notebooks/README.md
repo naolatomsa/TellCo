@@ -23,3 +23,25 @@
     Optimized clustering:
         Used the Elbow Method to confirm 3 optimal clusters.
 
+# Task 3: Experience Analytics
+
+    Aggregate metrics: Average TCP retransmission, RTT, throughput, and handset type (handle missing/outliers with mean/mode).
+    List top 10, bottom 10, and most frequent TCP, RTT, and throughput values.
+    Visualize and interpret average throughput and TCP retransmission per handset type.
+    Perform k-means clustering (k=3) to segment users and describe clusters.
+
+# Task 4: Satisfaction Analysis
+
+    Assign engagement and experience scores using Euclidean distance.
+    Calculate satisfaction as the average of engagement and experience scores; identify top 10 satisfied users.
+    Build a regression model to predict satisfaction scores.
+    Perform k-means clustering (k=2) on scores and aggregate satisfaction and experience per cluster.
+    Export user data with scores to MySQL and provide a query screenshot.
+
+# Task 5: Dashboard Development
+
+    Create a Streamlit dashboard with pages for:
+        User Overview, Engagement, Experience, and Satisfaction Analysis.
+    Include one plot per page with interactive widgets.
+    Ensure usability, interactivity, and professional design for deployment.
+
