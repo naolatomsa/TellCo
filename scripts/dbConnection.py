@@ -3,9 +3,6 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 
-
-# Database URL
-# DATABASE_URL = "postgresql+psycopg2://postgres:admin@localhost:5432/xdr_data"
 DATABASE_URL = os.getenv("DATABASE_URL")
 
 # Function to create the engine

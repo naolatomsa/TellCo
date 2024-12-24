@@ -5,9 +5,14 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.preprocessing import StandardScaler
 from sqlalchemy import create_engine
+import os
+from dotenv import load_dotenv
+load_dotenv()
+
+db_uri= os.getenv("DATABASE_URL")
 
 
-def agggregate_metrics_per_customer(data, table_name, db_uri):
+def agggregate_metrics_per_customer(data, table_name):
     aggregated = data.groupby('MSISDN/Number').agg({
         'Avg RTT DL (ms)': 'mean',
         'Avg RTT UL (ms)': 'mean',
@@ -84,7 +89,7 @@ def distribution_and_interpretation(aggregated):
     
 
 # Task 3.4: K-Means Clustering
-def k_means_clustering(aggregated,table_name_centroids, db_uri):
+def k_means_clustering(aggregated,table_name_centroids):
     # Normalize metrics
     features = ['Avg_TCP_Retransmission', 'Avg_RTT', 'Avg_Throughput']
     scaler = StandardScaler()
