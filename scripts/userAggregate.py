@@ -1,5 +1,11 @@
 import pandas as pd
 from sqlalchemy import create_engine
+import os
+from dotenv import load_dotenv
+load_dotenv()
+
+db_uri = os.getenv("DATABASE_URL")
+
 def user_aggregate(data):
     user_aggregated = data.groupby('MSISDN/Number').agg({
         'Bearer Id': 'count',  # Number of xDR sessions
@@ -48,10 +54,7 @@ def calculate_total_data_volume(data):
 
     # Calculate Total Data Volume for Other Applications
     user_aggregated['Other'] = user_aggregated['Other DL (Bytes)'] + user_aggregated['Other UL (Bytes)']
-    
-         # Save the file in the current directory
-    user_aggregated.to_csv('engagement_metrics.csv', index=False)
-    print(f"Aggregated metrics saved to {'engagement_metrics.csv'}")
+
     return user_aggregated;
 
 def segment_user(data):
@@ -64,7 +67,7 @@ def segment_user(data):
     return user_aggregated;
 
 
-def engagement_metricss(data, table_name, db_uri):
+def engagement_metricss(data, table_name):
     # Aggregate engagement metrics per user
     engagement_metrics = data.groupby('MSISDN/Number').agg({
         'Bearer Id': 'count',  # Session frequency

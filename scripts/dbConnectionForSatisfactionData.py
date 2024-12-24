@@ -1,9 +1,11 @@
 
 from sqlalchemy import create_engine, text
 import pandas as pd
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
-# Database URL
-DATABASE_URL = "postgresql+psycopg2://postgres:admin@localhost:5432/xdr_data"
+DATABASE_URL = os.getenv("DATABASE_URL")
 
 
 def connection_for_data(table_name):

@@ -5,6 +5,11 @@ from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import StandardScaler
 from sqlalchemy import create_engine
 import matplotlib.pyplot as plt
+import os
+from dotenv import load_dotenv
+load_dotenv()
+
+db_uri = os.getenv("DATABASE_URL")
 
 # Task 4.1: Merge engagement and experience data
 def merge_data(engagement_data, experience_data):
@@ -94,7 +99,7 @@ def aggregate_cluster_scores(data):
     return cluster_aggregates
 
 # Task 4.6: Export Data to MySQL
-def export_to_postgres(data, table_name, db_uri):
+def export_to_postgres(data, table_name):
     
     engine = create_engine(db_uri)
 

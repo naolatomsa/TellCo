@@ -5,8 +5,13 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import numpy as np
 from sqlalchemy import create_engine
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
-def normalize_metrics(engagement_metrics, table_name_centroids, db_uri):
+db_uri = os.getenv("DATABASE_URL")
+
+def normalize_metrics(engagement_metrics, table_name_centroids):
     # Normalize metrics
     scaler = MinMaxScaler()
     normalized_metrics = scaler.fit_transform(engagement_metrics[['Session Frequency', 'Total Session Duration', 'Total Traffic']])
@@ -45,7 +50,7 @@ def normalize_metrics(engagement_metrics, table_name_centroids, db_uri):
 
 def optimize_k_in_k_means_clustering(engagement_metrics):
     
-    normalized_metrics= normalize_metrics(engagement_metrics, 'engagement_centroids', "postgresql+psycopg2://postgres:admin@localhost:5432/xdr_data" )
+    normalized_metrics= normalize_metrics(engagement_metrics, 'engagement_centroids')
     inertia = []
     for k in range(1, 10):
         kmeans = KMeans(n_clusters=k, random_state=42)
